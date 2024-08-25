@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form with Boxed Options and Text Boxes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+        }
+
+        .form-section {
+            flex: 0 0 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            scroll-snap-align: start;
+            color: #333;
+            transition: background 0.5s ease-in-out;
+        }
+
+        label {
+            margin-bottom: 30px;
+            font-size: 2em;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .options {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .option {
+            background-color: #ffffff;
+            color: #333;
+            padding: 20px 40px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            text-align: center;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s, color 0.3s;
+        }
+
+        .option:hover {
+            transform: translateY(-3px);
+            background-color: #333;
+            color: #ffffff;
+        }
+
+        .option input {
+            display: none;
+        }
+
+        .option.selected {
+            background-color: #333;
+            color: #ffffff;
+        }
+
+        .option.clicked {
+            transform: scale(1.1);
+        }
+
+        input[type="text"], input[type="email"], textarea {
+            width: 80%;
+            max-width: 400px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 25px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        button {
+            padding: 15px 30px;
+            border: none;
+            background-color: #ffffff;
+            color: #333;
+            border-radius: 25px;
+            font-size: 1.2em;
+            cursor: pointer;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, background-color 0.3s, color 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            background-color: #333;
+            color: #ffffff;
+        }
+
+        button.clicked {
+            background-color: #333;
+            color: #ffffff;
+            transform: scale(1.1);
+        }
+
+        /* Background colors for sections */
+        #section0 { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); }
+        #section1 { background: linear-gradient(135deg, #FF9A9E 0%, #FAD0C4 100%); }
+        #section2 { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); }
+        #section3 { background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%); }
+        #section4 { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+        #section5 { background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%); }
+        #section6 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        #section7 { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); }
+        #section8 { background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%); }
+        #section9 { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+        #section10 { background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%); }
+        #section11 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        #section12 { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); }
+        #section13 { background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%); }
+        #section14 { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+        #section15 { background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%); }
+        #section16 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        #section17 { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); }
+        #section18 { background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%); }
+        #section19 { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+        #section20 { background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%); }
+        #section21 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        #section22 { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); }
+        #section23 { background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%); }
+        #section24 { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+        #section25 { background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%); }
+        #section26 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    </style>
+    <script>
+        function nextSection(sectionId, button) {
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+            buttonClick(button);
+        }
+
+        function selectOption(option) {
+            const options = option.parentElement.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            applyClickedAnimation(option);
+        }
+
+        function toggleOption(option) {
+            const checkbox = option.querySelector('input[type="checkbox"]');
+            if (checkbox.checked) {
+                option.classList.remove('selected');
+                checkbox.checked = false;
+            } else {
+                option.classList.add('selected');
+                checkbox.checked = true;
+            }
+            applyClickedAnimation(option);
+        }
+
+        function applyClickedAnimation(element) {
+            element.classList.add('clicked');
+            setTimeout(() => {
+                element.classList.remove('clicked');
+            }, 300);
+        }
+
+        function buttonClick(button) {
+            button.classList.add('clicked');
+            setTimeout(() => {
+                button.classList.remove('clicked');
+            }, 300);
+        }
+    </script>
+</head>
+<body>
+    <form method="POST" action="https://script.google.com/macros/s/AKfycbwIxe-kVzOlUgfHkTMfS3xaREKXB2FYbwvaWjrU94BiVKWMIo-TczAmEzlg5uowRiM/exec">
+        <div class="container">
+            <!-- Email Address Question -->
+            <section class="form-section" id="section0">
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" name="Email Address" placeholder="Your email address" required>
+                <button type="button" onclick="nextSection('section1', this)">Next</button>
+            </section>
+            <!-- Question 1 -->
+            <section class="form-section" id="section1">
+                <label for="1) What is your name (First Last)">What is your name?</label>
+                <input type="text" id="name" name="1) What is your name (First Last)" required>
+                <button type="button" onclick="nextSection('section2', this)">Next</button>
+            </section>
+
+            <!-- Question 2 -->
+            <section class="form-section" id="section2">
+                <label for="5) What is your grade">What grade are you in?</label>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="5) What is your grade" value="Freshman">
+                        Freshman
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="5) What is your grade" value="Sophomore">
+                        Sophomore
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="5) What is your grade" value="Junior">
+                        Junior
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="5) What is your grade" value="Senior">
+                        Senior
+                    </label>
+                </div>
+                <button type="button" onclick="nextSection('section3', this)">Next</button>
+            </section>
+
+            <!-- Question 3 -->
+            <section class="form-section" id="section3">
+                <label for="6) What is your gender">What is your gender?</label>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="6) What is your gender" value="Female">
+                        Female
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="6) What is your gender" value="Male">
+                        Male
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="6) What is your gender" value="Non-binary">
+                        Non-binary
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="6) What is your gender" value="Gender queer">
+                        Gender queer
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="6) What is your gender" value="Other">
+                        Other
+                    </label>
+                </div>
+                <button type="button" onclick="nextSection('section4', this)">Next</button>
+            </section>
+
+            <!-- Question 4 -->
+            <section class="form-section" id="section4">
+                <label for="2) What is your snapchat username (Optional)">Snapchat Username (optional):</label>
+                <input type="text" id="snapchat" name="2) What is your snapchat username (Optional)">
+                <button type="button" onclick="nextSection('section5', this)">Next</button>
+            </section>
+
+            <!-- Question 5 -->
+            <section class="form-section" id="section5">
+                <label for="3) What is your instagram username (Optional)">Instagram Username (optional):</label>
+                <input type="text" id="instagram" name="3) What is your instagram username (Optional)">
+                <button type="button" onclick="nextSection('section6', this)">Next</button>
+            </section>
+
+            <!-- Question 6 -->
+            <section class="form-section" id="section6">
+                <label for="4) What is your tiktok username (Optional)">TikTok Username (optional):</label>
+                <input type="text" id="tiktok" name="4) What is your tiktok username (Optional)">
+                <button type="button" onclick="nextSection('section7', this)">Next</button>
+            </section>
+
+            <!-- Question 7 -->
+<section class="form-section" id="section7">
+    <label for="7) What gender are you interested in (check all that apply)">What gender are you interested in? (Check all that apply):</label>
+    <div class="options">
+        <label class="option" onclick="toggleOption(this)">
+            <input type="checkbox" name="7) What gender are you interested in (check all that apply)[]" value="Female">
+            Female
+        </label>
+        <label class="option" onclick="toggleOption(this)">
+            <input type="checkbox" name="7) What gender are you interested in (check all that apply)[]" value="Male">
+            Male
+        </label>
+        <label class="option" onclick="toggleOption(this)">
+            <input type="checkbox" name="7) What gender are you interested in (check all that apply)[]" value="Non-binary">
+            Non-binary/Genderqueer
+        </label>
+    </div>
+    <button type="button" onclick="nextSection('section8', this)">Next</button>
+</section>
+
+
+<!-- Question 8 -->
+<section class="form-section" id="section8">
+    <label for="8) Which grade are you interested in (check all that apply)">What grade are you interested in? (Check all that apply):</label>
+    <div class="options">
+        <label class="option" onclick="toggleOption(this)">
+            <input type="checkbox" name="8) Which grade are you interested in (check all that apply)[]" value="Freshman">
+            Freshman
+        </label>
+        <label class="option" onclick="toggleOption(this)">
+            <input type="checkbox" name="8) Which grade are you interested in (check all that apply)[]" value="Sophomore">
+            Sophomore
+        </label>
+        <label class="option" onclick="toggleOption(this)">
+            <input type="checkbox" name="8) Which grade are you interested in (check all that apply)[]" value="Junior">
+            Junior
+        </label>
+        <label class="option" onclick="toggleOption(this)">
+            <input type="checkbox" name="8) Which grade are you interested in (check all that apply)[]" value="Senior">
+            Senior
+        </label>
+    </div>
+    <button type="button" onclick="nextSection('section9', this)">Next</button>
+</section>
+
+
+            <!-- Question 9 -->
+            <section class="form-section" id="section9">
+                <label for="9) What’s your love language?">What’s your love language?</label>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="9) What’s your love language?" value="Quality time">
+                        Quality time
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="9) What’s your love language?" value="Receiving gifts">
+                        Receiving gifts
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="9) What’s your love language?" value="Words of affirmation">
+                        Words of affirmation
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="9) What’s your love language?" value="Physical touch">
+                        Physical touch
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="9) What’s your love language?" value="Thoughtful acts">
+                        Thoughtful acts
+                    </label>
+                </div>
+                <button type="button" onclick="nextSection('section10', this)">Next</button>
+            </section>
+
+            <!-- Question 10 -->
+            <section class="form-section" id="section10">
+                <label for="10) What social media do you use the most?">What social media do you use the most?</label>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="10) What social media do you use the most?" value="Snapchat">
+                        Snapchat
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="10) What social media do you use the most?" value="Instagram">
+                        Instagram
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="10) What social media do you use the most?" value="Tiktok">
+                        TikTok
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="10) What social media do you use the most?" value="X">
+                        X (Twitter)
+                    </label>
+                </div>
+                <button type="button" onclick="nextSection('section11', this)">Next</button>
+            </section>
+
+            <!-- Question 11 -->
+            <section class="form-section" id="section11">
+                <label for="11) What’s your favorite music genre?">What’s your favorite music genre?</label>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="11) What’s your favorite music genre?" value="Pop">
+                        Pop
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="11) What’s your favorite music genre?" value="Rap">
+                        Rap
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="11) What’s your favorite music genre?" value="Country">
+                        Country
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="11) What’s your favorite music genre?" value="Rock">
+                        Rock
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="11) What’s your favorite music genre?" value="Indie">
+                        Indie
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="11) What’s your favorite music genre?" value="R&B">
+                        R&B
+                    </label>
+                </div>
+                <button type="button" onclick="nextSection('section12', this)">Next</button>
+            </section>
+
+            <!-- Question 12 -->
+            <section class="form-section" id="section12">
+                <label for="12) What’s your favorite fast-food restaurant?">What’s your favorite fast-food restaurant?</label>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="12) What’s your favorite fast-food restaurant?" value="Chick-fil-A">
+                        Chick-fil-A
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="12) What’s your favorite fast-food restaurant?" value="McDonald’s">
+                        McDonald’s
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="12) What’s your favorite fast-food restaurant?" value="Wendy’s">
+                        Wendy’s
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="12) What’s your favorite fast-food restaurant?" value="Popeye’s">
+                        Popeye’s
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="12) What’s your favorite fast-food restaurant?" value="Chipotle">
+                        Chipotle
+                    </label>
+                </div>
+                <button type="button" onclick="nextSection('section13', this)">Next</button>
+            </section>
+
+            <!-- Question 13 -->
+            <section class="form-section" id="section13">
+                <label for="13) Are you a romantic?">Are you a romantic?</label>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="13) Are you a romantic?" value="Yes" required> Yes
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="13) Are you a romantic?" value="I guess" required> I guess
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="13) Are you a romantic?" value="No way" required> No way
+                    </label>
+                </div>
+                <button type="button" onclick="nextSection('section14', this)">Next</button>
+            </section>
+
+            <!-- Question 14 -->
+            <section class="form-section" id="section14">
+                <label for="14) What’s your ideal first date?">What’s your ideal first date?</label>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="14) What’s your ideal first date?" value="Restaurant">
+                        Restaurant
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="14) What’s your ideal first date?" value="Picnic in the park">
+                        Picnic in the park
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="14) What’s your ideal first date?" value="Movie">
+                        Movie
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="14) What’s your ideal first date?" value="Ice cream">
+                        Ice cream
+                    </label>
+                </div>
+                <button type="button" onclick="nextSection('section15', this)">Next</button>
+            </section>
+
+            <!-- Question 15 -->
+            <section class="form-section" id="section15">
+                <label for="15) What’s your favorite season?">What’s your favorite season?</label>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="15) What’s your favorite season?" value="Fall">
+                        Fall
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="15) What’s your favorite season?" value="Summer">
+                        Summer
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="15) What’s your favorite season?" value="Spring">
+                        Spring
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="15) What’s your favorite season?" value="Winter">
+                        Winter
+                    </label>
+                </div>
+                <button type="button" onclick="nextSection('section16', this)">Next</button>
+            </section>
+
+            <!-- Question 16 -->
+            <section class="form-section" id="section16">
+                <label for="16) What are your biggest red flags? (check all that apply)">What are your biggest red flags? (Check all that apply)</label>
+                <div class="options">
+                    <label class="option" onclick="toggleOption(this)">
+                        <input type="checkbox" name="16) What are your biggest red flags? (check all that apply)[]" value="Late replies">
+                        Late replies
+                    </label>
+                    <label class="option" onclick="toggleOption(this)">
+                        <input type="checkbox" name="16) What are your biggest red flags? (check all that apply)[]" value="Best friend of the opposite gender">
+                        Best friend of the opposite gender
+                    </label>
+                    <label class="option" onclick="toggleOption(this)">
+                        <input type="checkbox" name="16) What are your biggest red flags? (check all that apply)[]" value="Canceling plans">
+                        Canceling plans
+                    </label>
+                    <label class="option" onclick="toggleOption(this)">
+                        <input type="checkbox" name="16) What are your biggest red flags? (check all that apply)[]" value="They prioritize their friends/family over you">
+                        They prioritize their friends/family over you
+                    </label>
+                </div>
+                <button type="button" onclick="nextSection('section17', this)">Next</button>
+            </section>
+
+            <!-- Question 17 -->
+            <section class="form-section" id="section17">
+                <label for="17) Would you rather ask someone out or be asked out?">Would you rather ask someone out or be asked out?</label>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="17) Would you rather ask someone out or be asked out?" value="Ask someone out">
+                        Ask someone out
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="17) Would you rather ask someone out or be asked out?" value="Be asked out">
+                        Be asked out
+                    </label>
+                </div>
+                <button type="button" onclick="nextSection('section18', this)">Next</button>
+            </section>
+
+            <!-- Question 18 -->
+            <section class="form-section" id="section18">
+                <label for="18) What’s your favorite holiday?">What’s your favorite holiday?</label>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="18) What’s your favorite holiday?" value="Christmas">
+                        Christmas
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="18) What’s your favorite holiday?" value="Thanksgiving">
+                        Thanksgiving
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="18) What’s your favorite holiday?" value="Halloween">
+                        Halloween
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="18) What’s your favorite holiday?" value="Hanukkah">
+                        Hanukkah
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="18) What’s your favorite holiday?" value="Kwanzaa">
+                        Kwanzaa
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="18) What’s your favorite holiday?" value="4th of July">
+                        The 4th of July
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="18) What’s your favorite holiday?" value="Valentine’s Day">
+                        Valentine’s Day
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="18) What’s your favorite holiday?" value="Easter">
+                        Easter
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="18) What’s your favorite holiday?" value="April Fool’s Day">
+                        April Fool’s Day
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="18) What’s your favorite holiday?" value="Birthday">
+                        Birthday
+                    </label>
+                </div>
+                <button type="button" onclick="nextSection('section19', this)">Next</button>
+            </section>
+
+            <!-- Question 19 -->
+            <section class="form-section" id="section19">
+                <label for="19) What’s your favorite movie genre?">What’s your favorite movie genre?</label>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="19) What’s your favorite movie genre?" value="Rom-coms">
+                        Rom-coms
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="19) What’s your favorite movie genre?" value="Action">
+                        Action
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="19) What’s your favorite movie genre?" value="Comedy">
+                        Comedy
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="19) What’s your favorite movie genre?" value="Horror">
+                        Horror
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="19) What’s your favorite movie genre?" value="Drama">
+                        Drama
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="19) What’s your favorite movie genre?" value="Thriller">
+                        Thriller
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="19) What’s your favorite movie genre?" value="Sci-fi">
+                        Sci-fi
+                    </label>
+                </div>
+                <button type="button" onclick="nextSection('section20', this)">Next</button>
+            </section>
+
+            <!-- Question 20 -->
+            <section class="form-section" id="section20">
+                <label for="20) Are you a show or a movie person?">Are you a show or a movie person?</label>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="20) Are you a show or a movie person?" value="Shows">
+                        Shows
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="20) Are you a show or a movie person?" value="Movies">
+                        Movies
+                    </label>
+                </div>
+                <button type="button" onclick="nextSection('section21', this)">Next</button>
+            </section>
+
+            <!-- Question 21 -->
+            <section class="form-section" id="section21">
+                <label for="21) Are you a texter or a caller?">Are you a texter or a caller?</label>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="21) Are you a texter or a caller?" value="Text">
+                        Text
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="21) Are you a texter or a caller?" value="Call">
+                        Call
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="21) Are you a texter or a caller?" value="Facetiming">
+                        Facetiming
+                    </label>
+                </div>
+                <button type="button" onclick="nextSection('section22', this)">Next</button>
+            </section>
+
+            <!-- Question 22 -->
+            <section class="form-section" id="section22">
+                <label for="22) What’s your favorite thing to do in your free time?">What’s your favorite thing to do in your free time?</label>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="22) What’s your favorite thing to do in your free time?" value="Hanging out with my friends">
+                        Hanging out with my friends
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="22) What’s your favorite thing to do in your free time?" value="Shopping">
+                        Shopping
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="22) What’s your favorite thing to do in your free time?" value="Eating out">
+                        Eating out
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="22) What’s your favorite thing to do in your free time?" value="Playing sports">
+                        Playing sports
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="22) What’s your favorite thing to do in your free time?" value="Watching TV">
+                        Watching TV
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="22) What’s your favorite thing to do in your free time?" value="Reading">
+                        Reading
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="22) What’s your favorite thing to do in your free time?" value="Scrolling through social media">
+                        Scrolling through social media
+                    </label>
+                </div>
+                <button type="button" onclick="nextSection('section23', this)">Next</button>
+            </section>
+
+            <!-- Question 23 -->
+            <section class="form-section" id="section23">
+                <label for="23) If your house was on fire, who would you save?">If your house was on fire, who would you save?</label>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="23) If your house was on fire, who would you save?" value="Myself">
+                        Myself
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="23) If your house was on fire, who would you save?" value="My family">
+                        My family
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="23) If your house was on fire, who would you save?" value="My pet/pets">
+                        My pet/pets
+                    </label>
+                </div>
+                <button type="button" onclick="nextSection('section24', this)">Next</button>
+            </section>
+
+            <!-- Question 24 -->
+            <section class="form-section" id="section24">
+                <label for="24) What would you do with a billion dollars?">What would you do with a billion dollars?</label>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="24) What would you do with a billion dollars?" value="Buy a private jet">
+                        Buy a private jet
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="24) What would you do with a billion dollars?" value="Buy a mansion">
+                        Buy a mansion
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="24) What would you do with a billion dollars?" value="Buy an island">
+                        Buy an island
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="24) What would you do with a billion dollars?" value="Invest/save it">
+                        Invest/save it
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="24) What would you do with a billion dollars?" value="Donate to charity">
+                        Donate to charity
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="24) What would you do with a billion dollars?" value="Get bored">
+                        Get bored
+                    </label>
+                </div>
+                <button type="button" onclick="nextSection('section25', this)">Next</button>
+            </section>
+
+            <!-- Question 25 -->
+            <section class="form-section" id="section25">
+                <label for="25) If a waiter got your order wrong, would you tell them?">If a waiter got your order wrong, would you tell them?</label>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="25) If a waiter got your order wrong, would you tell them?" value="Yes">
+                        Yes
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="25) If a waiter got your order wrong, would you tell them?" value="No">
+                        No
+                    </label>
+                </div>
+                <button type="button" onclick="nextSection('section26', this)">Next</button>
+            </section>
+
+
+        <!-- Question 26 -->
+
+            <!-- Final Section -->
+            <section class="form-section" id="section26">
+                <label for="26) Are you going to reach out to your matches after this survey?">Are you going to reach out to your matches after this survey?</label>
+                <div class="options">
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="26) Are you going to reach out to your matches after this survey?" value="Yes">
+                        Yes
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="26) Are you going to reach out to your matches after this survey?" value="No">
+                        No
+                    </label>
+                    <label class="option" onclick="selectOption(this)">
+                        <input type="radio" name="26) Are you going to reach out to your matches after this survey?" value="Depends on who I get">
+                        Depends on who I get
+                    </label>
+                </div>
+                <button type="submit" onclick="buttonClick(this)">Submit</button>
+            </section>
+        </div>
+    </form>
+</body>
+</html>
